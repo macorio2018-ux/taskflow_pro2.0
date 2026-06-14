@@ -24,4 +24,5 @@ Esta versión está restringida y optimizada para la carrera de **Ingeniería de
 El proyecto incluye todo lo necesario (`requirements.txt`, configuración de Flask) para ser desplegado instantáneamente en plataformas como **Render.com** o **PythonAnywhere** usando `gunicorn app:app`.
 
 ---
-*Hecho con dedicación para los estudiantes de la Universidad Privada Franz Tamayo.*
+*Hecho con dedicación para los estudiantes de la Universidad Privada Franz Tamayo.*  
+**Creado por Mauro (@mauro.inge)**
