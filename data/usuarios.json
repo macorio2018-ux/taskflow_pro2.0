@@ -1,0 +1,10 @@
+[
+    {
+        "id": "de0b2a0e-07ac-4182-91cb-461447a1bcb3",
+        "usuario": "mauro",
+        "password_hash": "scrypt:32768:8:1$HoPAicJ3ucPjlkWa$56530346c31c7243f51c4d7c551c4b8cc11263dca098d1cb1bb474edfa7fdaebe23b36bda41cab23ba89cb2052ab30e6c7f92f39f596440e9b3a360abaefde5d",
+        "facultad": "Ingeniería",
+        "carrera": "ingieneria en sistemas",
+        "auth_provider": "local"
+    }
+]

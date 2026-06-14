@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>TaskFlow Pro - Registro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-card" style="width: 450px;">
+            <h1>Crea tu <span class="text-primary">Cuenta</span></h1>
+            <p>Únete a TaskFlow Pro UNIFRANZ</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="/registro" method="POST">
+                <div class="form-group">
+                    <label>Nombre de Usuario</label>
+                    <input type="text" name="usuario" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Facultad</label>
+                    <select name="facultad" class="form-control" required>
+                        <option value="">Selecciona tu facultad...</option>
+                        <option value="Ingeniería">Ingeniería</option>
+                        <option value="Ciencias Económicas">Ciencias Económicas</option>
+                        <option value="Ciencias de la Salud">Ciencias de la Salud</option>
+                        <option value="Diseño y Arquitectura">Diseño y Arquitectura</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Carrera</label>
+                    <input type="text" name="carrera" class="form-control" placeholder="Ej: Ingeniería de Sistemas"
+                        required>
+                </div>
+                <button type="submit" class="btn">Registrarse</button>
+            </form>
+            <p style="margin-top: 20px; font-size: 13px;">¿Ya tienes cuenta? <a href="/login" class="text-primary"
+                    style="text-decoration:none; font-weight:bold;">Inicia Sesión</a></p>
+        </div>
+    </div>
+</body>
+
+</html>
