@@ -1,0 +1,13 @@
+{
+    "Ingeniería de Sistemas": {
+        "1": ["Programación I", "Informática de Sistemas y Ensamblaje", "Administración General", "Cálculo I", "Física I", "Álgebra I", "Inglés I"],
+        "2": ["Programación II", "Base de Datos I", "Probabilidad y Estadística", "Cálculo II", "Física II", "Álgebra II", "Inglés II"],
+        "3": ["Estructura de Datos", "Análisis y Diseño I", "Base de Datos II", "Ecuaciones Diferenciales", "Electricidad y Magnetismo", "Inglés III"],
+        "4": ["Programación III", "Análisis y Diseño II", "Sistemas Operativos", "Electrónica General", "Investigación Operativa I", "Métodos Numéricos", "Inglés IV"],
+        "5": ["Programación Avanzada", "Ingeniería de Sistemas", "Ingeniería de Software I", "Sistemas Operativos Móviles y Embebidos", "Sistemas de Comunicaciones", "Sistemas Digitales", "Preparación y Evaluación de Proyectos", "Proyecto Integrador Intermedio I"],
+        "6": ["Programación Gráfica y Multimedia I", "Ingeniería de Software II", "Programación de Sistemas Embebidos", "Minería de Datos", "Redes I", "Microprocesadores y Microcontroladores", "Administración de Proyectos", "Proyecto Integrador Intermedio II"],
+        "7": ["Programación Gráfica y Multimedia II", "Programación de Dispositivos Móviles", "Inteligencia Artificial", "Testing, Quality Assurance", "Redes II", "Sistemas de Control", "Política y Gerencia Empresarial", "Proyecto Integrador Intermedio III"],
+        "8": ["Internet de las Cosas", "Inteligencia Artificial, Machine Learning y Aprendizaje Profundo", "Auditoría Informática", "Seguridad Informática", "Legislación Empresarial", "Dirección y Liderazgo Creativo", "Metodología de la Investigación", "Práctica Profesional"],
+        "9": ["Realidad Aumentada y Virtual", "Administración de Redes IoT", "Big Data", "Inteligencia Artificial en Sistemas Embebidos", "Diseño de Interfaces Hombre-Máquina Inteligentes", "Programación Avanzada de Sistemas Inteligentes", "Ciencia de Datos", "Automatización, Seguridad y Control", "Taller de Grado", "Proyecto Integrador Final"]
+    }
+}

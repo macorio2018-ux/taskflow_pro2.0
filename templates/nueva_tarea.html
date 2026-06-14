@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Nueva Tarea - TaskFlow Pro</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
 </head>
 
 <body>
@@ -27,8 +29,11 @@
                 <h1 style="font-size:28px; margin-bottom:5px;">Crear Nueva Tarea</h1>
                 <p style="color:var(--text-muted);">Rellena los datos de tu próxima asignación</p>
             </div>
-            <button class="btn" style="width:auto; padding:12px 24px; background:#333;"
-                onclick="document.location.href='/dashboard'">Cancelar</button>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button class="theme-toggle" id="theme-toggle" title="Cambiar Tema"><i data-feather="sun"></i></button>
+                <button class="btn" style="width:auto; padding:12px 24px; background:#333;"
+                    onclick="document.location.href='/dashboard'">Cancelar</button>
+            </div>
         </div>
 
         <div class="login-card" style="width:100%; max-width:700px; margin-top:20px; text-align:left;">
@@ -50,19 +55,17 @@
                         placeholder="Breve resumen de la tarea..." required></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Materia / Asignatura</label>
+                    <label>Materia</label>
                     <select name="materia" class="form-control" required>
                         <option value="">Selecciona la materia...</option>
-                        <option value="Programación">Programación</option>
-                        <option value="Cálculo">Cálculo</option>
-                        <option value="Base de Datos">Base de Datos</option>
-                        <option value="Inglés Técnico">Inglés Técnico</option>
-                        <option value="Ética y Valores">Ética y Valores</option>
+                        {% for m in materias %}
+                            <option value="{{ m }}">{{ m }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Fecha Límite y Hora de Entrega</label>
-                    <input type="datetime-local" name="fecha_limite" class="form-control" required>
+                    <label>Fecha y Hora Límite</label>
+                    <input type="text" name="fecha_limite" id="fecha_limite" class="form-control" placeholder="Haz clic para seleccionar..." required>
                 </div>
                 <div class="form-group">
                     <label>Prioridad</label>
@@ -76,7 +79,18 @@
             </form>
         </div>
     </div>
-    <script>feather.replace();</script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script>
+        feather.replace();
+        flatpickr("#fecha_limite", {
+            enableTime: true,
+            dateFormat: "Y-m-d\\TH:i",
+            time_24hr: true,
+            minDate: "today"
+        });
+    </script>
 </body>
 
 </html>

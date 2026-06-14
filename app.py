@@ -37,12 +37,10 @@ def registro():
     if request.method == "POST":
         usuario = request.form.get("usuario", "").strip()
         password = request.form.get("password", "").strip()
-        facultad = request.form.get("facultad", "").strip()
-        carrera = request.form.get("carrera", "").strip()
 
         usuarios = cargar_json(USUARIOS_FILE, [])
 
-        if not usuario or not password or not facultad or not carrera:
+        if not usuario or not password:
             flash("Todos los campos son obligatorios", "error")
             return redirect(url_for("registro"))
 
@@ -51,16 +49,17 @@ def registro():
                 flash("El usuario ya existe", "error")
                 return redirect(url_for("registro"))
 
-        nuevo_usuario = {
+        nuevo = {
             "id": str(uuid.uuid4()),
             "usuario": usuario,
             "password_hash": generate_password_hash(password),
-            "facultad": facultad,
-            "carrera": carrera,
+            "facultad": "Ingeniería",
+            "carrera": "Ingeniería de Sistemas",
+            "semestre": "1",
             "auth_provider": "local"
         }
 
-        usuarios.append(nuevo_usuario)
+        usuarios.append(nuevo)
         guardar_json(USUARIOS_FILE, usuarios)
         return redirect(url_for("login"))
 
@@ -80,6 +79,7 @@ def login():
                 session["usuario"] = u["usuario"]
                 session["facultad"] = u["facultad"]
                 session["carrera"] = u["carrera"]
+                session["semestre"] = u.get("semestre", "1")
                 return redirect(url_for("dashboard"))
 
         flash("Usuario o contraseña incorrectos", "error")
@@ -131,11 +131,28 @@ def dashboard():
                 except ValueError:
                     pass
 
+    MATERIAS_FILE = os.path.join("data", "materias_unifranz.json")
+    materias_data = cargar_json(MATERIAS_FILE, {})
+    materias_mvp = materias_data.get("Ingeniería de Sistemas", {}).get("1", [])
+
+    # Agrupar tareas por materia (inicializado con las 7 materias obligatorias)
+    tareas_por_materia = {m: [] for m in materias_mvp}
+    
+    for t in tareas:
+        materia_nombre = t.get("materia", "General")
+        if materia_nombre in tareas_por_materia:
+            tareas_por_materia[materia_nombre].append(t)
+        else:
+            if "Otras Materias" not in tareas_por_materia:
+                tareas_por_materia["Otras Materias"] = []
+            tareas_por_materia["Otras Materias"].append(t)
+
     return render_template(
         "dashboard.html",
         user=user_info,
         stats=stats_info,
-        tareas=tareas
+        tareas=tareas,
+        tareas_por_materia=tareas_por_materia
     )
 
 @app.route("/crear-tarea", methods=["GET", "POST"])
@@ -175,11 +192,17 @@ def crear_tarea():
         flash("Tarea creada exitosamente", "success")
         return redirect(url_for("dashboard"))
 
+    MATERIAS_FILE = os.path.join("data", "materias_unifranz.json")
+    materias_data = cargar_json(MATERIAS_FILE, {})
+    
+    # MVP Hardcodeado a Sistemas Semestre 1
+    materias_disponibles = materias_data.get("Ingeniería de Sistemas", {}).get("1", [])
+
     user_info = {
         "usuario": session["usuario"],
         "carrera": session["carrera"]
     }
-    return render_template("nueva_tarea.html", user=user_info)
+    return render_template("nueva_tarea.html", user=user_info, materias=materias_disponibles)
 
 @app.route("/completar-tarea/<tarea_id>")
 def completar_tarea(tarea_id):
@@ -213,6 +236,24 @@ def eliminar_tarea(tarea_id):
     guardar_json(TAREAS_FILE, tareas_data)
     flash("Tarea eliminada", "success")
     return redirect(url_for("dashboard"))
+
+@app.route("/configuracion", methods=["GET", "POST"])
+def configuracion():
+    if "usuario_id" not in session:
+        return redirect(url_for("login"))
+        
+    usuarios = cargar_json(USUARIOS_FILE, [])
+    usuario_actual = next((u for u in usuarios if u["id"] == session["usuario_id"]), None)
+
+    if request.method == "POST":
+        flash("La configuración está bloqueada en esta versión de prueba", "success")
+        return redirect(url_for("configuracion"))
+
+    user_info = {
+        "usuario": session["usuario"],
+        "carrera": session["carrera"]
+    }
+    return render_template("configuracion.html", user=user_info, perfil=usuario_actual)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5050)

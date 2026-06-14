@@ -30,8 +30,10 @@
                 <h1 style="font-size:28px; margin-bottom:5px;">Panel Principal</h1>
                 <p style="color:var(--text-muted);">Aquí están tus tareas del semestre</p>
             </div>
-            <button class="btn" style="width:auto; padding:12px 24px;" onclick="document.location.href='/crear-tarea'">+
-                Nueva Tarea</button>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button class="theme-toggle" id="theme-toggle" title="Cambiar Tema"><i data-feather="sun"></i></button>
+                <button class="btn" style="width:auto; padding:12px 24px;" onclick="document.location.href='/crear-tarea'">+ Nueva Tarea</button>
+            </div>
         </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -45,15 +47,15 @@
         <div class="kpi-grid">
             <div class="kpi-card">
                 <h3>Tareas Activas</h3>
-                <div class="value">{{ stats['total'] }}</div>
+                <div class="value">{{ total }}</div>
             </div>
             <div class="kpi-card success">
                 <h3>Completadas</h3>
-                <div class="value">{{ stats['completadas'] }}</div>
+                <div class="value">{{ completadas }}</div>
             </div>
             <div class="kpi-card danger">
                 <h3>Pendientes</h3>
-                <div class="value">{{ stats['pendientes'] }}</div>
+                <div class="value">{{ pendientes }}</div>
             </div>
             <div class="kpi-card">
                 <h3>Universidad</h3>
@@ -61,65 +63,75 @@
             </div>
         </div>
 
-        <div class="task-section">
-            <div class="task-header">
-                <h3>Próximas Entregas</h3>
+        {% if tareas_por_materia %}
+            {% for materia, lista_tareas in tareas_por_materia.items() %}
+            <div class="login-card" style="width:100%; margin-top:20px; text-align:left;">
+                <h3 style="margin-bottom: 20px; color:var(--primary); display:flex; align-items:center; gap:10px;">
+                    <i data-feather="folder"></i> {{ materia }}
+                </h3>
+                <table style="width:100%; border-collapse:collapse; text-align:left;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <th style="padding:10px; color:var(--text-muted);">Tarea</th>
+                            <th style="padding:10px; color:var(--text-muted);">Fecha Límite</th>
+                            <th style="padding:10px; color:var(--text-muted);">Prioridad</th>
+                            <th style="padding:10px; color:var(--text-muted);">Estado</th>
+                            <th style="padding:10px; color:var(--text-muted);">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tarea in lista_tareas %}
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding:15px;">
+                                <div style="font-weight:600;">{{ tarea['titulo'] }}</div>
+                                <span class="task-category">{{ tarea['descripcion'] }}</span>
+                            </td>
+                            <td style="font-weight:600; color:var(--text-main);">{{ tarea['fecha_limite'].strftime('%d/%m/%Y %H:%M') }}</td>
+                            <td>
+                                {% if tarea['prioridad'] == 'Alta' %}
+                                <span class="badge badge-danger">Alta</span>
+                                {% elif tarea['prioridad'] == 'Media' %}
+                                <span class="badge badge-warning">Media</span>
+                                {% else %}
+                                <span class="badge badge-success">Baja</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if tarea['estado'] == 'completada' %}
+                                <span class="badge badge-success">Completada</span>
+                                {% else %}
+                                <span class="badge badge-warning" style="background:#4a4a4a; color:#fff;">Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    {% if tarea['estado'] == 'pendiente' %}
+                                    <a href="/completar-tarea/{{ tarea['id'] }}" class="btn-icon complete" title="Marcar completada">
+                                        <i data-feather="check"></i>
+                                    </a>
+                                    {% endif %}
+                                    <a href="/eliminar-tarea/{{ tarea['id'] }}" class="btn-icon delete" title="Eliminar tarea"
+                                        onclick="return confirm('¿Seguro que deseas eliminar esta tarea?')">
+                                        <i data-feather="trash-2"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tarea</th>
-                        <th>Materia</th>
-                        <th>Fecha Límite</th>
-                        <th>Prioridad</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tarea in tareas %}
-                    <tr>
-                        <td>
-                            <span class="task-title">{{ tarea['titulo'] }}</span>
-                            <span class="task-category">{{ tarea['descripcion'] }}</span>
-                        </td>
-                        <td>{{ tarea['materia'] }}</td>
-                        <td style="font-weight:600; color:var(--primary);">{{ tarea['fecha_limite'].strftime('%d/%m/%Y %H:%M')
-                            }}</td>
-                        <td>
-                            {% if tarea['prioridad'] == 'Alta' %}
-                            <span class="badge alta">Alta</span>
-                            {% elif tarea['prioridad'] == 'Media' %}
-                            <span class="badge media">Media</span>
-                            {% else %}
-                            <span class="badge baja">Baja</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if tarea['estado'] == 'completada' %}
-                            <span class="badge completada">Completada</span>
-                            {% else %}
-                            <span class="badge pendiente">Pendiente</span>
-                            {% endif %}
-                        </td>
-                        <td class="actions">
-                            <a href="/completar-tarea/{{ tarea['id'] }}" class="btn-icon" title="Completar"><i
-                                    data-feather="check"></i></a>
-                            <a href="/eliminar-tarea/{{ tarea['id'] }}" class="btn-icon" title="Eliminar"><i
-                                    data-feather="trash-2"></i></a>
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">
-                            ¡Felicidades! No tienes tareas pendientes. 🥳
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            {% endfor %}
+        {% else %}
+            <div class="login-card" style="width:100%; margin-top:20px; text-align:center; padding: 40px;">
+                <i data-feather="inbox" style="width: 50px; height: 50px; color: var(--text-muted); margin-bottom: 15px;"></i>
+                <h3 style="color: var(--text-muted);">Tu espacio de estudio está vacío</h3>
+                <p style="color: var(--text-muted);">Crea tu primera tarea para empezar a organizarte por materias.</p>
+            </div>
+        {% endif %}
     </div>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script>feather.replace();</script>
 </body>
 
