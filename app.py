@@ -155,6 +155,10 @@ def dashboard():
         tareas_por_materia=tareas_por_materia
     )
 
+@app.route("/tareas")
+def tareas():
+    return redirect(url_for("dashboard"))
+
 @app.route("/crear-tarea", methods=["GET", "POST"])
 def crear_tarea():
     if "usuario_id" not in session:
