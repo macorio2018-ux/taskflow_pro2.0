@@ -1,4 +1,4 @@
-# TaskFlow Pro 🚀
+# TaskFlow Pro 
 **MVP (Minimum Viable Product) - Ingeniería de Sistemas, 1er Semestre (UNIFRANZ)**
 
 TaskFlow Pro es un gestor de tareas inteligente diseñado específicamente para ayudar a los estudiantes universitarios a organizar sus deberes por materias, realizar seguimiento de sus fechas de entrega y no perder de vista sus prioridades.
